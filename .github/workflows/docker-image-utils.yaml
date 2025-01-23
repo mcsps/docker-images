@@ -8,7 +8,7 @@ on:
       - "*"
 env:
   MTRREPO: mtr.devops.telekom.de/mcsps/utils
-  GHCRREPO: ghcr.io/mcps/utils
+  GHCRREPO: ghcr.io/mcsps/utils
 
 jobs:
   build:
