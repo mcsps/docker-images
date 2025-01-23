@@ -62,7 +62,7 @@ jobs:
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/utils/utils@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/utils@${{ steps.build-push.outputs.digest }}
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/utils@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
