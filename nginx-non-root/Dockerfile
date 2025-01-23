@@ -1,9 +1,9 @@
 FROM docker.io/nginx:alpine
+LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
 
 # source: https://github.com/nginxinc/docker-nginx-unprivileged/
 
 # Add System Tools
-
 RUN apk add --update --no-cache bash curl wget git busybox-extras mysql-client && apk upgrade
 # implement changes required to run NGINX as an unprivileged user
 RUN sed -i -e '/listen/!b' -e '/80;/!b' -e 's/80;/8080;/' /etc/nginx/conf.d/default.conf \
