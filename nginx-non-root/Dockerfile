@@ -1,4 +1,4 @@
-FROM docker.io/nginx:latest
+FROM docker.io/nginx-alpine:latest
 
 # source: https://github.com/nginxinc/docker-nginx-unprivileged/
 
