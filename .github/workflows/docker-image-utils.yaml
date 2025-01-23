@@ -6,10 +6,6 @@ on:
       - main
     tags:
       - "*"
-env:
-  MTRREPO: mtr.devops.telekom.de/mcsps/utils
-  GHCRREPO: ghcr.io/mcsps/utils
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,8 +17,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            $MTRREPO
-            $GHCRREPO
+            mtr.devops.telekom.de/mcsps/utils
+            ghcr.io/mcsps/utils
           tags: |
             type=ref,event=tag
             type=ref,event=branch
@@ -56,12 +52,12 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            $MTRREPO:latest
-            $GHCRREPO:latest
+            mtr.devops.telekom.de/mcsps/utils:latest
+            ghcr.io/mcsps/utils:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false $MTRREPO:utils@${{ steps.build-push.outputs.digest }}
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false $GHCRREPO:utils@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/utils/utils@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/utils@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
