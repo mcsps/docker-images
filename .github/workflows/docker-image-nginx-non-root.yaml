@@ -6,6 +6,9 @@ on:
       - main
     tags:
       - "*"
+  schedule:
+    - cron: "15 4 1 * *"
+
 jobs:
   build:
     runs-on: ubuntu-latest
