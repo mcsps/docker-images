@@ -10,7 +10,7 @@ on:
 #    - cron: "15 4 1 * *"
 
 env:
-  IMAGE: "fyne-build"
+  IMAGE: fyne-build
   COSIGN_KEY: ${{secrets.COSIGN_KEY}}
 
 jobs:
@@ -29,8 +29,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            mtr.devops.telekom.de/mcsps/$IMAGE
-            ghcr.io/mcsps/$IMAGE
+            mtr.devops.telekom.de/mcsps/${{ env.IMAGE }}
+            ghcr.io/mcsps/${{ env.IMAGE }}
           tags: |
             type=ref,event=tag
             type=ref,event=branch
