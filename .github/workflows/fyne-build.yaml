@@ -2,15 +2,15 @@ name: Build Image fyne-build
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - "*"
-  schedule:
-    - cron: "15 4 1 * *"
+#    branches:
+#      - main
+#    tags:
+#      - "*"
+#  schedule:
+#    - cron: "15 4 1 * *"
 
 env:
-  IMAGE: fyne-build
+  IMAGE: "fyne-build"
 
 jobs:
   build:
@@ -60,12 +60,12 @@ jobs:
         uses: docker/build-push-action@v5
         id: build-push
         with:
-          context: ./$IMAGE/
+          context: ./${IMAGE}/
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            mtr.devops.telekom.de/mcsps/$IMAGE:latest
-            ghcr.io/mcsps/$IMAGE:latest
+            mtr.devops.telekom.de/mcsps/${IMAGE}:latest
+            ghcr.io/mcsps/${IMAGE}:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
