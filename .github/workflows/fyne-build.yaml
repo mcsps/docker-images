@@ -11,6 +11,7 @@ on:
 
 env:
   IMAGE: "fyne-build"
+  COSIGN_KEY: ${{secrets.COSIGN_KEY}}
 
 jobs:
   build:
@@ -57,19 +58,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         id: build-push
         with:
-          context: ./${IMAGE}/
+          context: ./${{ env.IMAGE }}/
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            mtr.devops.telekom.de/mcsps/${IMAGE}:latest
-            ghcr.io/mcsps/${IMAGE}:latest
+            mtr.devops.telekom.de/mcsps/${{ env.IMAGE }}:latest
+            ghcr.io/mcsps/${{ env.IMAGE }}:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/$IMAGE@${{ steps.build-push.outputs.digest }}
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/$IMAGE@${{ steps.build-push.outputs.digest }}
-        env:
-          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/${{ env.IMAGE }}@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/${{ env.IMAGE }}@${{ steps.build-push.outputs.digest }}
