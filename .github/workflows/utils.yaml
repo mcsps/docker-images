@@ -3,7 +3,7 @@ name: Build Image utils
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
   schedule:

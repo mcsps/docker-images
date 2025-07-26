@@ -1,9 +1,9 @@
-name: Build Image s3cmd
+name: Build Image socat
 
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
   schedule:
@@ -25,8 +25,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            mtr.devops.telekom.de/mcsps/s3cmd
-            ghcr.io/mcsps/s3cmd
+            mtr.devops.telekom.de/mcsps/socat
+            ghcr.io/mcsps/socat
           tags: |
             type=ref,event=tag
             type=ref,event=branch
@@ -56,16 +56,16 @@ jobs:
         uses: docker/build-push-action@v5
         id: build-push
         with:
-          context: ./s3cmd
+          context: ./socat
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            mtr.devops.telekom.de/mcsps/s3cmd:latest
-            ghcr.io/mcsps/s3cmd:latest
+            mtr.devops.telekom.de/mcsps/socat:latest
+            ghcr.io/mcsps/socat:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/s3cmd@${{ steps.build-push.outputs.digest }}
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/s3cmd@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/socat@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/socat@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}

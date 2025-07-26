@@ -1,9 +1,9 @@
-name: Build Image golang
+name: Build Image busybox
 
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
   schedule:
@@ -25,8 +25,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            mtr.devops.telekom.de/mcsps/golang
-            ghcr.io/mcsps/golang
+            mtr.devops.telekom.de/mcsps/busybox
+            ghcr.io/mcsps/busybox
           tags: |
             type=ref,event=tag
             type=ref,event=branch
@@ -56,16 +56,16 @@ jobs:
         uses: docker/build-push-action@v5
         id: build-push
         with:
-          context: ./golang
+          context: ./busybox
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            mtr.devops.telekom.de/mcsps/golang:latest
-            ghcr.io/mcsps/golang:latest
+            mtr.devops.telekom.de/mcsps/busybox:latest
+            ghcr.io/mcsps/busybox:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/golang@${{ steps.build-push.outputs.digest }}
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/golang@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/busybox@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/busybox@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}

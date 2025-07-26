@@ -3,7 +3,7 @@ name: Build Image nginx-non-root
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
   schedule:
