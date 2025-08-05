@@ -10,6 +10,7 @@ RUN sed -i -e '/listen/!b' -e '/80;/!b' -e 's/80;/8080;/' /etc/nginx/conf.d/defa
     && sed -i -e '/    index  index.html index.htm;/a \ \ \ \     autoindex on;' /etc/nginx/conf.d/default.conf \
     && sed -i -e '/user/!b' -e '/nginx/!b' -e '/nginx/d' /etc/nginx/nginx.conf \
     && sed -i 's!/var/run/nginx.pid!/tmp/nginx.pid!g' /etc/nginx/nginx.conf \
+    && sed -i 's/txt/txt md/g' /etc/nginx/mime.types \
     && sed -i '/http {/a \
     set_real_ip_from 0.0.0.0/0;\
     real_ip_header X-Forwarded-For;\
