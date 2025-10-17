@@ -6,6 +6,8 @@ on:
       - dev
     tags:
       - "*"
+    paths: 
+    - 'socat/*'
   schedule:
     - cron: "15 4 1 * *"
 
