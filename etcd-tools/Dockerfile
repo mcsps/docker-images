@@ -15,8 +15,8 @@ RUN apt-get update && \
     rm -rf /tmp/etcd.tar.gz && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --gid 1000 etcd
-RUN adduser --gid 1000 etcd
+RUN groupadd --gid 1000 etcd
+RUN useradd --gid 1000 etcd
 
 USER etcd
 
