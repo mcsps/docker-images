@@ -14,6 +14,10 @@ RUN apt-get update && \
     rm -rf /tmp/etcd.tar.gz && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN groupadd --gid 1001 etcd && useradd --gid 1001
+
+USER etcd
+
 WORKDIR /
 
 ENTRYPOINT ["/bin/sh"]
