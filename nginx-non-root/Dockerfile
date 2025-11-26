@@ -1,5 +1,5 @@
 FROM docker.io/nginx:1.29-alpine
-LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
+LABEL org.opencontainers.image.source="https://github.com/mcsps/docker-images"
 
 # source: https://github.com/nginxinc/docker-nginx-unprivileged/
 
