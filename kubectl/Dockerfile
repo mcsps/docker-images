@@ -1,5 +1,6 @@
 FROM alpine:latest
 LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
+
 RUN apk --no-cache add ca-certificates bash curl git jq openssl
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.31.0/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
