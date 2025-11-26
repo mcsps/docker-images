@@ -24,7 +24,7 @@ jobs:
             mtr.devops.telekom.de/mcsps/kubectl
             ghcr.io/mcsps/kubectl
           tags: |
-            type=semver,pattern={{version}},value=v1.31.0 # change also in the Dockerfile
+            type=semver,pattern={{version}},value=v1.32.0 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
