@@ -2,14 +2,8 @@ name: Build Image golang
 
 on:
   push:
-    branches:
-      - dev
-    tags:
-      - "*"
     paths: 
     - 'golang/*'
-  schedule:
-    - cron: "15 4 1 * *"
 
 jobs:
   build:
@@ -30,10 +24,8 @@ jobs:
             mtr.devops.telekom.de/mcsps/golang
             ghcr.io/mcsps/golang
           tags: |
-            type=ref,event=tag
-            type=ref,event=branch
-            type=ref,event=pr
             type=raw,value=latest
+            type=semver,pattern={{version}},value=1.24 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
