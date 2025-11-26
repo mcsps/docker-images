@@ -2,7 +2,7 @@ FROM alpine:latest
 LABEL org.opencontainers.image.source="https://github.com/mcsps/docker-images"
 
 RUN apk --no-cache add ca-certificates bash curl git jq openssl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.32.0/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.33.0/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
 RUN curl -L https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | PATH=$PATH:/usr/local/bin HELM_INSTALL_DIR=/usr/local/bin bash
 RUN adduser -u 1000 -D appuser
 
