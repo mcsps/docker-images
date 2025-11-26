@@ -2,7 +2,6 @@ FROM docker.io/nginx:1.29-alpine
 LABEL org.opencontainers.image.source="https://github.com/mcsps/docker-images"
 
 # source: https://github.com/nginxinc/docker-nginx-unprivileged/
-
 # Add System Tools
 RUN apk add --update --no-cache bash curl wget git busybox-extras mysql-client && apk upgrade
 # implement changes required to run NGINX as an unprivileged user

@@ -25,7 +25,7 @@ jobs:
             ghcr.io/mcsps/nginx-non-root
           tags: |
             type=raw,value=latest
-            type=semver,pattern={{version}},value=1.29 # change also in the Dockerfile
+            type=semver,pattern={{version}},value=1.29.0 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
