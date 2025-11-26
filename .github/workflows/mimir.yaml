@@ -2,14 +2,8 @@ name: Build Image mimir
 
 on:
   push:
-    branches:
-      - dev
-    tags:
-      - "*"
     paths: 
     - 'mimir/*'
-  schedule:
-    - cron: "15 4 1 * *"
 
 jobs:
   build:
@@ -30,10 +24,8 @@ jobs:
             mtr.devops.telekom.de/mcsps/mimir
             ghcr.io/mcsps/mimir
           tags: |
-            type=ref,event=tag
-            type=ref,event=branch
-            type=ref,event=pr
             type=raw,value=latest
+            type=semver,pattern={{version}},value=2.17.0 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
