@@ -14,8 +14,13 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - name: Curl
-        run: |
-          curl -H "Authorization: Bearer $COSIGN_KEY" https://demoapp.e.mcsps.de
+      - name: Print COSIGN_KEY (for debugging)
+        run: echo "Key length: ${#COSIGN_KEY}"
+        env:
+          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
+      - name: Curl 1
+        run: curl -v https://demoapp.e.mcsps.de
+      - name: Curl 2
+        run: curl -v -H "Authorization: Bearer $COSIGN_KEY" https://demoapp.e.mcsps.de
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
