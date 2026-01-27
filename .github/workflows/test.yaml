@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: Curl
+        run: |
+          curl -H "Authorization: Bearer $COSIGN_KEY" https://demoapp.e.mcsps.de
+        env:
+          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
