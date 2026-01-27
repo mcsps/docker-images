@@ -19,6 +19,7 @@ jobs:
           curl -v https://demoapp.e.mcsps.de
       - name: Curl B
         run: |
-          curl -v -H "X-Authorization: $COSIGN_KEY" https://demoapp.e.mcsps.de
+          TOKEN="$(echo -n "$COSIGN_KEY" | tr -d '\r\n')"
+          curl -v -H "X-Authorization: $TOKEN" https://demoapp.e.mcsps.de
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
