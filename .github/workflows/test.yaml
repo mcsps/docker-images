@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print COSIGN_KEY (for debugging)
-        run: echo "Key length: $COSIGN_KEY"
+        run: echo "Key length: COSIGN_KEY"
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
       - name: Curl A
