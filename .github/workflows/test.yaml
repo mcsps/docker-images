@@ -8,19 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     steps:
       - name: Print COSIGN_KEY (for debugging)
         run: echo "Key length: ${#COSIGN_KEY}"
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
-      - name: Curl 1
+      - name: Curl A
         run: curl -v https://demoapp.e.mcsps.de
-      - name: Curl 2
+      - name: Curl B
         run: curl -v -H "Authorization: Bearer $COSIGN_KEY" https://demoapp.e.mcsps.de
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
