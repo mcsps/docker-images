@@ -27,7 +27,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            mtr.devops.telekom.de/mcsps/busybox
             ghcr.io/mcsps/busybox
           tags: |
             type=ref,event=tag
@@ -42,12 +41,6 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Login to MTR
-        uses: docker/login-action@v3
-        with:
-          registry: mtr.devops.telekom.de
-          username: ${{ secrets.MTR_USERNAME }}
-          password: ${{ secrets.MTR_PASSWORD }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -62,12 +55,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            mtr.devops.telekom.de/mcsps/busybox:latest
             ghcr.io/mcsps/busybox:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false mtr.devops.telekom.de/mcsps/busybox@${{ steps.build-push.outputs.digest }}
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/busybox@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
