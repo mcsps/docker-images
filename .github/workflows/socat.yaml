@@ -47,9 +47,16 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push
+      - name: Build (PR only)
+        if: github.event_name == 'pull_request'
         uses: docker/build-push-action@v5
-        id: build-push
+        with:
+          context: ./socat
+          platforms: linux/amd64,linux/arm64
+          push: false
+      - name: Build and push (merge only)
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v5
         with:
           context: ./socat
           platforms: linux/amd64,linux/arm64
@@ -58,6 +65,7 @@ jobs:
             ghcr.io/mcsps/socat:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
+        if: github.event_name == 'push'
         run: |
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/socat@${{ steps.build-push.outputs.digest }}
         env:
