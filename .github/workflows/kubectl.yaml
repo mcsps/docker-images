@@ -1,9 +1,9 @@
-name: Build Image nginx-non-root
+name: Build Image kubectl
 
 on:
   push:
     paths: 
-    - 'nginx-non-root/*'
+    - 'kubectl/*'
 
 jobs:
   build:
@@ -21,10 +21,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/mcsps/nginx-non-root
+            ghcr.io/mcsps/kubectl
           tags: |
-            type=raw,value=latest
-            type=semver,pattern={{version}},value=1.29.0 # change also in the Dockerfile
+            type=semver,pattern={{version}},value=v1.35.0 # change also in the Dockerfile
+            type=semver,pattern={{major}}.{{minor}},value=v1.35.0 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
@@ -43,22 +43,22 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: docker/build-push-action@v5
         with:
-          context: ./nginx-non-root
+          context: ./kubectl
           platforms: linux/amd64,linux/arm64
           push: false
       - name: Build and push (merge only)
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: ./nginx-non-root
+          context: ./kubectl
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/mcsps/nginx-non-root:latest
+            ghcr.io/mcsps/kubectl:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         if: github.event_name == 'push'
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/nginx-non-root@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/kubectl@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
