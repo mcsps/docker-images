@@ -5,6 +5,7 @@ USER root
 RUN grafana cli plugins install grafana-advisor-app
 RUN grafana cli plugins update-all
 RUN cp -R /var/lib/grafana/plugins /opt
+
 RUN ls /opt
 
 USER grafana
