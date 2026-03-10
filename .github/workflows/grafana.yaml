@@ -28,7 +28,7 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
-          cosign-release: "v2.4.0"
+          cosign-release: "v2.5.0"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -56,9 +56,11 @@ jobs:
           tags: |
             ghcr.io/mcsps/grafana:latest
             ${{ steps.meta.outputs.tags }}
+         outputs: type=image,name=ghcr.io/mcsps/grafana,push=true,digest-file=./digest.txt
       - name: Sign Push
         if: github.event_name == 'push'
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/grafana@${{ steps.build-push.outputs.digest }}
+          digest=$(cat ./digest.txt)
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/grafana@${digest}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
