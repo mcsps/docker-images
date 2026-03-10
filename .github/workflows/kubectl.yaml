@@ -46,7 +46,7 @@ jobs:
           context: ./kubectl
           platforms: linux/amd64,linux/arm64
           push: false
-      - name: Build and push (merge only)
+      - name: Build and push
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
