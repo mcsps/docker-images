@@ -54,8 +54,9 @@ jobs:
           context: ./busybox
           platforms: linux/amd64,linux/arm64
           push: false
-      - name: Build and push (merge only)
+      - name: Build and push
         if: github.event_name == 'push'
+        id: build-push
         uses: docker/build-push-action@v5
         with:
           context: ./busybox

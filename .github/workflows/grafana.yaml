@@ -46,7 +46,8 @@ jobs:
           context: ./grafana
           platforms: linux/amd64,linux/arm64
           push: false
-      - name: Build and push (merge only)
+      - name: Build and push
+        id: build-push
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
@@ -56,11 +57,9 @@ jobs:
           tags: |
             ghcr.io/mcsps/grafana:latest
             ${{ steps.meta.outputs.tags }}
-          outputs: type=image,name=ghcr.io/mcsps/grafana,push=true,digest-file=./digest.txt
       - name: Sign Push
         if: github.event_name == 'push'
         run: |
-          digest=$(cat ./digest.txt)
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/grafana@${digest}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/grafana@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
