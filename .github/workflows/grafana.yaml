@@ -24,7 +24,7 @@ jobs:
             ghcr.io/mcsps/grafana
           tags: |
             type=raw,value=latest
-            type=semver,pattern={{version}},value=12.3 # change also in the Dockerfile
+            type=semver,pattern={{version}},value=12.3.5 # change also in the Dockerfile
       - name: Install Cosign
         uses: sigstore/cosign-installer@main
         with:
