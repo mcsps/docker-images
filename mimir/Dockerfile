@@ -1,5 +1,5 @@
 FROM busybox:uclibc as builder
-FROM grafana/mimirtool:3.0.4 as mimirtool
+FROM grafana/mimirtool:3.0.5 as mimirtool
 FROM grafana/mimir:3.0.4
 
 COPY --from=builder /bin/sh /bin/sh
