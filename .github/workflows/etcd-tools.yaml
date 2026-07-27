@@ -66,7 +66,7 @@ jobs:
             ghcr.io/mcsps/etcd-tools:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && !github.actor_type == 'Bot'
         run: |
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/etcd-tools@${{ steps.build-push.outputs.digest }}
         env:
