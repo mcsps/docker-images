@@ -4,6 +4,7 @@ on:
   push:
     paths: 
     - 'mimir/*'
+    - '.github/workflows/mimir.yaml'
 
 jobs:
   build:
