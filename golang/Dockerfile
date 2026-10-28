@@ -1,4 +1,5 @@
 FROM docker.io/golang:1.27-alpine
+
 LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
 RUN apk --no-cache add ca-certificates bash curl git jq openssl sqlite net-tools sudo
 
