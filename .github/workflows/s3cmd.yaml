@@ -3,7 +3,7 @@ name: Build Image s3cmd
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
     paths: 

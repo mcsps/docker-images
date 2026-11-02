@@ -3,7 +3,7 @@ name: Build Image etcd-tools
 on:
   push:
     branches:
-      - main
+      - dev
     paths: 
     - 'etcd-tools/*'
     - '.github/workflows/etcd-tools.yaml'

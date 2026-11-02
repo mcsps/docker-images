@@ -23,8 +23,10 @@ downloads are also tracked through annotated version variables. kubectl, etcd,
 Go, Grafana, Mimir and nginx workflow tags are derived from their Dockerfiles.
 
 All ten image workflows build matching pull requests without registry login,
-publishing or signing. Publishing runs on matching pushes to `main`, existing
-tag triggers and monthly rebuilds on the default branch. Published builds pull
+publishing or signing. busybox, etcd-tools, s3cmd, socat and utils publish on
+matching pushes to `dev` and their existing tag triggers. The other image
+workflows publish on matching pushes to `main`. Monthly rebuilds run on the
+default branch. Published builds pull
 base images and disable the layer cache so floating downloads and unpinned
 packages are refreshed. Signing requires the existing `COSIGN_KEY` secret.
 

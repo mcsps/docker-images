@@ -3,7 +3,7 @@ name: Build Image socat
 on:
   push:
     branches:
-      - main
+      - dev
     tags:
       - "*"
     paths: 
