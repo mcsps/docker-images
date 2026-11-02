@@ -2,8 +2,16 @@ name: Build Image kubectl
 
 on:
   push:
+    branches: [main]
     paths: 
     - 'kubectl/*'
+    - '.github/workflows/kubectl.yaml'
+  pull_request:
+    paths:
+    - 'kubectl/*'
+    - '.github/workflows/kubectl.yaml'
+  schedule:
+    - cron: "15 4 1 * *"
 
 jobs:
   build:
@@ -16,6 +24,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Read kubectl version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(sed -n 's/^ARG KUBECTL_VERSION=//p' kubectl/Dockerfile)
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -23,9 +38,10 @@ jobs:
           images: |
             ghcr.io/mcsps/kubectl
           tags: |
-            type=semver,pattern={{version}},value=v1.36.0 # change also in the Dockerfile
-            type=semver,pattern={{major}}.{{minor}},value=v1.35.0 # change also in the Dockerfile
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.version }}
       - name: Install Cosign
+        if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v2.4.0"
@@ -34,6 +50,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -48,17 +65,19 @@ jobs:
           push: false
       - name: Build and push
         id: build-push
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v5
         with:
           context: ./kubectl
           platforms: linux/amd64,linux/arm64
           push: true
+          pull: true
+          no-cache: true
           tags: |
             ghcr.io/mcsps/kubectl:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
-        if: github.event_name == 'push' && !github.actor_type == 'Bot'
+        if: github.event_name != 'pull_request'
         run: |
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/kubectl@${{ steps.build-push.outputs.digest }}
         env:

@@ -2,8 +2,16 @@ name: Build Image nginx-non-root
 
 on:
   push:
+    branches: [main]
     paths: 
     - 'nginx-non-root/*'
+    - '.github/workflows/nginx-non-root.yaml'
+  pull_request:
+    paths:
+    - 'nginx-non-root/*'
+    - '.github/workflows/nginx-non-root.yaml'
+  schedule:
+    - cron: "15 4 1 * *"
 
 jobs:
   build:
@@ -16,6 +24,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Read nginx version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(sed -n 's/^FROM docker.io\/nginx:\([0-9.]*\)-alpine.*$/\1/p' nginx-non-root/Dockerfile)
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -24,8 +39,9 @@ jobs:
             ghcr.io/mcsps/nginx-non-root
           tags: |
             type=raw,value=latest
-            type=semver,pattern={{version}},value=1.29.0 # change also in the Dockerfile
+            type=raw,value=${{ steps.version.outputs.version }}
       - name: Install Cosign
+        if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v2.4.0"
@@ -34,6 +50,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -48,17 +65,19 @@ jobs:
           push: false
       - name: Build and push
         id: build-push
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v5
         with:
           context: ./nginx-non-root
           platforms: linux/amd64,linux/arm64
           push: true
+          pull: true
+          no-cache: true
           tags: |
             ghcr.io/mcsps/nginx-non-root:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
-        if: github.event_name == 'push' && !github.actor_type == 'Bot'
+        if: github.event_name != 'pull_request'
         run: |
           cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/nginx-non-root@${{ steps.build-push.outputs.digest }}
         env:
