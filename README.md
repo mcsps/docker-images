@@ -18,7 +18,7 @@ GitHub vulnerability alerts and Dependabot security updates are separate setting
 Existing Dependabot PRs are not automatically closed by this migration.
 
 The kubectl download is tracked through the annotated `KUBECTL_VERSION` in its
-Dockerfile, including newer Kubernetes minor releases. etcd, yq and mimirtool
+Dockerfile, including newer Kubernetes minor releases. etcd, yq, mimirtool and mc
 downloads are also tracked through annotated version variables. kubectl, etcd,
 Go, Grafana, Mimir and nginx workflow tags are derived from their Dockerfiles.
 
@@ -43,19 +43,20 @@ packages are refreshed. Signing requires the existing `COSIGN_KEY` secret.
 | nginx-non-root | nginx base image | APK packages |
 | s3cmd | None with the current floating tag | Python Alpine base, APK packages, pip s3cmd, stable kubectl |
 | socat | None with the current floating tag | Alpine base, APK socat |
-| utils | yq and mimirtool releases | Alpine base, APK packages, stable kubectl, Helm 3, Kustomize, Crossplane, vcluster, MinIO mc |
+| utils | yq, mimirtool and MinIO mc releases | Alpine base, APK packages, stable kubectl, Helm 3, Kustomize, Crossplane, vcluster |
 
 The workflows themselves are tracked by Renovate's GitHub Actions manager.
 Direct binary downloads use BuildKit's `TARGETARCH` for amd64/arm64 builds.
 Floating dependencies still have no reviewable version diff; pinning them is
 separate work from enabling rebuilds and tracking existing version pins.
 
-### Remaining download issue
+### MinIO mc download source
 
-On 2026-11-02, requests from the investigation environment to the MinIO mc binary
-URLs returned HTTP 410 for both `linux-amd64` and `linux-arm64`. Whether GitHub
-Actions sees the same response is not yet verified. No replacement source has
-been selected or verified in this rollout.
+The former `dl.min.io` mc download returned HTTP 410 in GitHub Actions on
+2026-11-02. The utilities image now downloads the pinned `MC_VERSION` from
+the official [MinIO mc GitHub releases](https://github.com/minio/mc/releases).
+The selected release provides Linux amd64 and arm64 assets. Renovate compares
+the timestamped release tags with numeric date, hour and minute fields.
 
 ### References
 
