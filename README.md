@@ -18,11 +18,46 @@ GitHub vulnerability alerts and Dependabot security updates are separate setting
 Existing Dependabot PRs are not automatically closed by this migration.
 
 The kubectl download is tracked through the annotated `KUBECTL_VERSION` in its
-Dockerfile. Updates stay on Kubernetes 1.36.x until `allowedVersions` in
-`renovate.json` is deliberately changed. kubectl and nginx-non-root workflow tags
-are derived from their Dockerfiles, and both workflows build pull requests
-without publishing. Publishing runs only on pushes to `main`.
+Dockerfile, including newer Kubernetes minor releases. etcd, yq and mimirtool
+downloads are also tracked through annotated version variables. kubectl, etcd,
+Go, Grafana, Mimir and nginx workflow tags are derived from their Dockerfiles.
 
-Floating base tags and unpinned APK packages still need rebuilds to pick up
-changes. The Helm installer in the kubectl image currently selects Helm 3 at
-build time and is not a pinned dependency managed by this initial rollout.
+All ten image workflows build matching pull requests without registry login,
+publishing or signing. Publishing runs on matching pushes to `main`, existing
+tag triggers and monthly rebuilds on the default branch. Published builds pull
+base images and disable the layer cache so floating downloads and unpinned
+packages are refreshed. Signing requires the existing `COSIGN_KEY` secret.
+
+### Image inventory
+
+| Image | Versioned dependencies tracked by Renovate | Dependencies resolved during rebuild |
+| --- | --- | --- |
+| busybox | None with the current floating tag | `busybox:latest` |
+| etcd-tools | Ubuntu base image, etcd release | APT packages |
+| golang | Go base image, yq release | APK packages, stable kubectl, Helm 3, Kustomize |
+| grafana | Grafana base image | Grafana plugins and plugin updates |
+| kubectl | kubectl release | Alpine base, APK packages, Helm 3 |
+| mimir | Mimir and mimirtool base images | BusyBox `uclibc` base |
+| nginx-non-root | nginx base image | APK packages |
+| s3cmd | None with the current floating tag | Python Alpine base, APK packages, pip s3cmd, stable kubectl |
+| socat | None with the current floating tag | Alpine base, APK socat |
+| utils | yq and mimirtool releases | Alpine base, APK packages, stable kubectl, Helm 3, Kustomize, Crossplane, vcluster, MinIO mc |
+
+The workflows themselves are tracked by Renovate's GitHub Actions manager.
+Direct binary downloads use BuildKit's `TARGETARCH` for amd64/arm64 builds.
+Floating dependencies still have no reviewable version diff; pinning them is
+separate work from enabling rebuilds and tracking existing version pins.
+
+### Remaining download issue
+
+On 2026-11-02, requests from the investigation environment to the MinIO mc binary
+URLs returned HTTP 410 for both `linux-amd64` and `linux-arm64`. Whether GitHub
+Actions sees the same response is not yet verified. No replacement source has
+been selected or verified in this rollout.
+
+### References
+
+- [Renovate Dockerfile version annotations](https://docs.renovatebot.com/presets-customManagers/#custommanagersdockerfileversions)
+- [Docker target-platform arguments](https://docs.docker.com/build/building/variables/#multi-platform-build-arguments)
+- [Build action v5 inputs](https://github.com/docker/build-push-action/tree/v5#inputs)
+- [GitHub schedule events](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)

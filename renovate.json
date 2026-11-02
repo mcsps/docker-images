@@ -51,11 +51,6 @@
       "matchFileNames": ["utils/**"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "groupName": "utils image"
-    },
-    {
-      "description": "Keep kubectl on the current Kubernetes minor until deliberately changed",
-      "matchPackageNames": ["kubernetes/kubernetes"],
-      "allowedVersions": ">=1.36.0 <1.37.0"
     }
   ]
 }
