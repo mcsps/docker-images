@@ -3,7 +3,7 @@ FROM docker.io/golang:1.27-alpine
 LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=mikefarah/yq
-ARG YQ_VERSION=v4.43.1
+ARG YQ_VERSION=v4.54.3
 RUN apk --no-cache add ca-certificates bash curl git jq openssl sqlite net-tools sudo
 
 RUN curl -fLO https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/linux/${TARGETARCH}/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
