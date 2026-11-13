@@ -4,7 +4,7 @@ ARG TARGETARCH
 # renovate: datasource=github-releases depName=mikefarah/yq
 ARG YQ_VERSION=v4.43.1
 # renovate: datasource=github-releases depName=grafana/mimir extractVersion=^mimir-(?<version>.+)$
-ARG MIMIRTOOL_VERSION=2.14.2
+ARG MIMIRTOOL_VERSION=3.2.5
 # renovate: datasource=github-releases depName=minio/mc
 ARG MC_VERSION=RELEASE.2025-08-13T08-35-41Z
 RUN apk --no-cache add ca-certificates bash curl git jq openssl mysql-client restic sqlite net-tools bind-tools openldap-clients
