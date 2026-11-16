@@ -2,7 +2,7 @@ FROM alpine:latest
 LABEL org.opencontainers.image.source = "https://github.com/mcsps/docker-images"
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=mikefarah/yq
-ARG YQ_VERSION=v4.43.1
+ARG YQ_VERSION=v4.54.3
 # renovate: datasource=github-releases depName=grafana/mimir extractVersion=^mimir-(?<version>.+)$
 ARG MIMIRTOOL_VERSION=3.2.5
 # renovate: datasource=github-releases depName=minio/mc
