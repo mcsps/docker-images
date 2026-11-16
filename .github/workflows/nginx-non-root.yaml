@@ -79,6 +79,6 @@ jobs:
       - name: Sign Push
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/mcsps/nginx-non-root@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --signing-config .github/cosign/no-tlog-signing-config.json ghcr.io/mcsps/nginx-non-root@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
