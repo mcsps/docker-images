@@ -2,7 +2,7 @@ FROM alpine:latest
 LABEL org.opencontainers.image.source="https://github.com/mcsps/docker-images"
 
 # renovate: datasource=github-tags depName=kubernetes/kubernetes
-ARG KUBECTL_VERSION=v1.36.0
+ARG KUBECTL_VERSION=v1.37.2
 ARG TARGETARCH
 
 RUN apk --no-cache add ca-certificates bash curl git jq openssl
